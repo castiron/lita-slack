@@ -77,11 +77,11 @@ module Lita
           response_data = call_api("rtm.connect")
 
           TeamData.new(
-            SlackIM.from_data_array(response_data["ims"]),
+            SlackIM.from_data_array([]),
             SlackUser.from_data(response_data["self"]),
-            SlackUser.from_data_array(response_data["users"]),
-            SlackChannel.from_data_array(response_data["channels"]) +
-              SlackChannel.from_data_array(response_data["groups"]),
+            SlackUser.from_data_array([]),     # users
+            SlackChannel.from_data_array([]) + # channels
+              SlackChannel.from_data_array([]),# groups
             response_data["url"],
           )
         end
