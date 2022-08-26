@@ -46,6 +46,10 @@ module Lita
           call_api("im.list")
         end
 
+        def users_list
+          call_api("users.list")
+        end
+
         def send_attachments(room_or_user, attachments)
           call_api(
             "chat.postMessage",
