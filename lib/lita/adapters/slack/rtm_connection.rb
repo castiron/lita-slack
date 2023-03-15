@@ -8,6 +8,21 @@ require 'lita/adapters/slack/message_handler'
 require 'lita/adapters/slack/room_creator'
 require 'lita/adapters/slack/user_creator'
 
+# This is a terrible monkey patch to temporarily work around a problem we're seeing with
+# Lita being unable to verify the Slack RTM SSL certificate.
+module Faye
+  class WebSocket
+    class Client
+      def start_tls(uri, options)
+        return unless SECURE_PROTOCOLS.include?(uri.scheme)
+        tls_options = { :sni_hostname => uri.host, :verify_peer => false }.merge(options)
+        @ssl_verifier = SslVerifier.new(uri.host, tls_options)
+        @stream.start_tls(tls_options)
+      end
+    end
+  end
+end
+
 module Lita
   module Adapters
     class Slack < Adapter
